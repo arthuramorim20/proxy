@@ -1,5 +1,5 @@
+import { getEnv } from "@src/config/env";
 import { Request, Response, NextFunction } from "express";
-import { env } from "../config/env";
 
 export function internalAuth(req: Request, res: Response, next: NextFunction) {
   const token = req.header("x-internal-token");
@@ -8,7 +8,7 @@ export function internalAuth(req: Request, res: Response, next: NextFunction) {
     return res.status(401).json({ error: "unauthorized" });
   }
 
-  if (token !== env.security.internalToken) {
+  if (token !== getEnv().INTERNAL_TOKEN) {
     return res.status(401).json({ error: "unauthorized" });
   }
 

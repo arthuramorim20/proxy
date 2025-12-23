@@ -6,7 +6,6 @@ const router = Router();
 
 router.use(internalAuth);
 
-// isso registra TUDO que começa com /pix
 router.use("/pix", proxyController);
 
 export default router;

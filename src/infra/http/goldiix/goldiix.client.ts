@@ -1,17 +1,17 @@
 import axios, { AxiosInstance } from "axios";
-import { env } from "../../../config/env";
+import { getEnv } from "../../../config/env";
 
 let accessToken: string | null = null;
 let tokenExpiresAt: number | null = null;
 
 function getBasicAuthHeader() {
-  const credentials = `${env.goldiix.publicKey}:${env.goldiix.secretKey}`;
+  const credentials = `${getEnv().GOLDIIX_PUBLIC_KEY}:${getEnv().GOLDIIX_SECRET_KEY}`;
   return `Basic ${Buffer.from(credentials).toString("base64")}`;
 }
 
 async function authenticate() {
   const { data } = await axios.post(
-    `${env.goldiix.baseUrl}/api/v2/auth/generate_token`,
+    `${getEnv().GOLDIIX_BASE_URL}/api/v2/auth/generate_token`,
     {},
     {
       headers: {
@@ -31,17 +31,12 @@ async function authenticate() {
 
 export function createGoldiixClient(): AxiosInstance {
   const client = axios.create({
-    baseURL: env.goldiix.baseUrl,
+    baseURL: getEnv().GOLDIIX_BASE_URL,
     timeout: 15000,
   });
 
-  // 🔐 inject bearer token
   client.interceptors.request.use(async (config) => {
-    // Avoid intercepting auth requests (although the path check in authenticate might be safer, using a separate call is cleaner)
-    // However, since we need to use the SAME base URL, we can just use axios directly or a separate instance.
-    // Let's modify authenticate to take the baseUrl instead of the client, OR use a fresh axios call.
 
-    // Better approach: Check if we have a token, if not/expired, get one using a plain axios call to avoid recursion.
     if (!accessToken || !tokenExpiresAt || Date.now() >= tokenExpiresAt - 60_000) {
       await authenticate();
     }
@@ -50,7 +45,6 @@ export function createGoldiixClient(): AxiosInstance {
     return config;
   });
 
-  // 🔁 retry automático em 401
   client.interceptors.response.use(
     (response) => response,
     async (error) => {

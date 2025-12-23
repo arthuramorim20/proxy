@@ -14,7 +14,7 @@ export class ProxyService {
   }) {
     return goldiixClient.request({
       method,
-      url: path, // ex: /api/v2/payment
+      url: path,
       data: body,
       headers: {
         "Content-Type": "application/json",
