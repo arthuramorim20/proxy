@@ -17,7 +17,6 @@ export class ProxyService {
       url: path, // ex: /api/v2/payment
       data: body,
       headers: {
-        Authorization: headers.authorization,
         "Content-Type": "application/json",
       },
     });
