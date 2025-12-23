@@ -5,7 +5,7 @@ import webhookRoutes from "./modules/webhook/webhook.routes";
 import dotenvExpand from "dotenv-expand";
 import logger from "./middlewares/logger";
 
-dotenvExpand.expand(dotenv.config({ path: ".env.development" }));
+dotenvExpand.expand(dotenv.config());
 
 const app = express();
 

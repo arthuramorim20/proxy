@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import dotenvExpand from "dotenv-expand";
 import app from "./server.js";
 
-dotenvExpand.expand(dotenv.config({ path: ".env.development" }));
+dotenvExpand.expand(dotenv.config());
 
 const port = process.env.PORT || 3333;
 
